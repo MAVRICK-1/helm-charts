@@ -18,6 +18,7 @@
 {{- end }}
 {{- $pfCmd := printf "kubectl port-forward svc/%s %s:%s -n %s" .Values.server.service.name $pfSrcPort $pfDstPort .Release.Namespace }}
 {{- $pfUrl := printf "%s://localhost:%s" $pfUrlProto $pfSrcPort }}
+
 Thank you for installing OpenEverest (v{{ .Chart.AppVersion }})!
 
 Follow the steps below to get started:
