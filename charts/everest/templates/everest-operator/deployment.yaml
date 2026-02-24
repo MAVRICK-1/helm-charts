@@ -27,7 +27,7 @@ spec:
         env:
         - name: SYSTEM_NAMESPACE
           value: {{ include  "everest.namespace" . }}
-        image: {{ .Values.operator.image }}:{{ .Chart.Version }}
+        image: {{ .Values.operator.image }}:{{ .Chart.AppVersion }}
         command:
         - /migrator
         imagePullPolicy: IfNotPresent
@@ -44,7 +44,7 @@ spec:
         - --webhook-cert-path=/tmp/k8s-webhook-server/serving-certs
         command:
         - /manager
-        image: {{ .Values.operator.image }}:{{ .Chart.Version }}
+        image: {{ .Values.operator.image }}:{{ .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3

@@ -10,7 +10,7 @@ spec:
   supportedEngines:
   - pxc
   jobSpec:
-    image: {{ .Values.dataImporters.perconaPXCOperator.image | default (printf "%s:%s" .Values.operator.image .Chart.Version) | quote }}
+    image: {{ .Values.dataImporters.perconaPXCOperator.image | default (printf "%s:%s" .Values.operator.image .Chart.AppVersion) | quote }}
     command: ["/data-importer", "pxc"]
   databaseClusterConstraints:
     requiredFields:

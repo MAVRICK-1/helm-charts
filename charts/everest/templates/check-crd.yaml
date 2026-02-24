@@ -14,7 +14,7 @@
     {{- end }}
     {{- $found = true }}
     {{- $version := index $crd.metadata.labels "everest.percona.com/version" }}
-    {{- if ne $version $.Chart.Version }}
+    {{- if ne $version $.Chart.AppVersion }}
       {{ fail "Ensure that CRDs are upgraded first" }}
     {{- end }}
   {{- end }}

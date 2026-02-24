@@ -7,7 +7,7 @@ spec:
   displayName: Everest Catalog
   grpcPodConfig:
     securityContextConfig: restricted
-  image: {{ .Values.olm.catalogSourceImage }}:{{ .Chart.Version }}
+  image: {{ .Values.olm.catalogSourceImage }}:{{ .Chart.AppVersion }}
   publisher: Percona
   sourceType: grpc
   updateStrategy:
