@@ -49,11 +49,11 @@ publish:
 	git worktree remove --force $(GH_PAGES_WORKTREE) 2>/dev/null || true
 	git worktree add $(GH_PAGES_WORKTREE) gh-pages
 	$(HELM) package . -d $(GH_PAGES_WORKTREE)
-    $(HELM) package ./charts/everest-crds -d $(GH_PAGES_WORKTREE)
-    $(HELM) package ./charts/everest-db-namespace -d $(GH_PAGES_WORKTREE)
-    $(HELM) repo index $(GH_PAGES_WORKTREE) --merge $(GH_PAGES_WORKTREE)/index.yaml
-    cd $(GH_PAGES_WORKTREE) && git add -A && git commit -m "Release chart v$(CHART_VERSION) (app v$(VERSION))" && git push origin gh-pages
-    git worktree remove --force $(GH_PAGES_WORKTREE)
+	$(HELM) package ./charts/everest-crds -d $(GH_PAGES_WORKTREE)
+	$(HELM) package ./charts/everest-db-namespace -d $(GH_PAGES_WORKTREE)
+	$(HELM) repo index $(GH_PAGES_WORKTREE) --merge $(GH_PAGES_WORKTREE)/index.yaml
+	cd $(GH_PAGES_WORKTREE) && git add -A && git commit -m "Release chart v$(CHART_VERSION) (app v$(VERSION))" && git push origin gh-pages
+	git worktree remove --force $(GH_PAGES_WORKTREE)
 
 .PHONY: release-and-publish
 release-and-publish: release publish
