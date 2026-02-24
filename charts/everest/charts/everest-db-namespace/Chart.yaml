@@ -2,7 +2,7 @@ apiVersion: v2
 name: everest-db-namespace
 description: A sub-chart for provisioning Everest DB namespaces.
 type: application
-version: "1.13.0"
+version: "1.13.1"
 appVersion: "1.13.0"
 kubeVersion: '>= 1.27.0-0'
 dependencies:
