@@ -13,7 +13,7 @@ To install OpenEverest with default settings:
 ```bash
 helm repo add openeverest https://openeverest.github.io/helm-charts/
 helm repo update
-helm install everest openeverest/everest \
+helm install everest openeverest/openeverest \
   --namespace everest-system \
   --create-namespace
 ```
