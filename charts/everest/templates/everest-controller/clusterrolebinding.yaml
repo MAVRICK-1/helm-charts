@@ -1,0 +1,14 @@
+{{- if .Values.controller.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: everest-controller-manager-rolebinding
+subjects:
+- kind: ServiceAccount
+  name: everest-controller-manager
+  namespace: {{ include "everest.namespace" . }}
+roleRef:
+  kind: ClusterRole
+  name: everest-controller-manager-role
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

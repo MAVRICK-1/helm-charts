@@ -167,6 +167,14 @@ The following table shows the configurable parameters of the OpenEverest chart a
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | compatibility.openshift | bool | `false` | Enable OpenShift compatibility. |
+| controller.command | string | `"/everest-controller"` | Command to run in the controller container. |
+| controller.enabled | bool | `true` | If set, enables the Everest controller manager. |
+| controller.env | list | `[]` | Additional environment variables to pass to the controller deployment. |
+| controller.healthProbeBindAddress | string | `":8081"` | Health probe address for the controller. |
+| controller.image | string |  | Image to use for the controller container. Defaults to the same image as the server (multi-binary image). |
+| controller.leaderElection | object | `{"enabled":true}` | Enable leader election for the controller manager. |
+| controller.metricsBindAddress | string | `"0"` | Metrics address for the controller. |
+| controller.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | Resources to allocate for the controller container. |
 | createMonitoringResources | bool | `true` | If set, creates resources for Kubernetes monitoring. |
 | dataImporters.perconaPGOperator | object | `{"enabled":true}` | Settings for the Percona PostgreSQL Operator data importer. |
 | dataImporters.perconaPGOperator.enabled | bool | `true` | If set, installs the Percona PostgreSQL Operator data importer. |

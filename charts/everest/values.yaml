@@ -182,6 +182,36 @@ operator:
     # This setting has no effect during installation.
     # @default -- true
     preserveTLSCerts: true
+controller:
+  # -- If set, enables the Everest controller manager.
+  enabled: true
+  # -- Image to use for the controller container.
+  # Defaults to the same image as the server (multi-binary image).
+  # @default -- uses the same image as the server.
+  image: ""
+  # -- Command to run in the controller container.
+  command: /everest-controller
+  # -- Health probe address for the controller.
+  healthProbeBindAddress: ":8081"
+  # -- Metrics address for the controller.
+  metricsBindAddress: "0"
+  # -- Enable leader election for the controller manager.
+  leaderElection:
+    enabled: true
+  # -- Resources to allocate for the controller container.
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+  # -- Additional environment variables to pass to the controller deployment.
+  env: []
+  # - name: key1
+  #   value: value1
+  # - name: key2
+  #   value: value2
 dataImporters:
   # -- Settings for the Percona PostgreSQL Operator data importer.
   perconaPGOperator:
