@@ -108,6 +108,13 @@ crds-gen:
 	CRD_SUBCHART_DIR=$(PWD)/charts/everest-crds \
 	$(MAKE) -C charts/everest-crds crds-gen
 
+.PHONY: controller-manifests-gen
+controller-manifests-gen: ## Sync controller RBAC manifests from the openeverest repo into Helm templates.
+	OPENEVEREST_REPO_URL=$(OPENEVEREST_REPO_URL) \
+	OPENEVEREST_VERSION=$(OPENEVEREST_CRD_VERSION) \
+	OUTPUT_DIR=$(PWD)/templates/everest-controller \
+	bash $(PWD)/scripts/sync-controller-rbac.sh
+
 .PHONY: prepare-pr
 prepare-pr:
 	$(MAKE) deps
@@ -115,3 +122,4 @@ prepare-pr:
 	EVEREST_OPERATOR_REPO_URL=$(EVEREST_OPERATOR_REPO_URL) \
 	CRD_DIR=$(CRD_DIR) \
 	CRD_VERSION=$(CRD_VERSION) $(MAKE) crds-gen link-crds
+	$(MAKE) controller-manifests-gen
