@@ -1,0 +1,13 @@
+server:
+  tls:
+    enabled: true
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 200m
+      memory: 64Mi
+  env:
+    - name: CUSTOM_ENV
+      value: "test"
