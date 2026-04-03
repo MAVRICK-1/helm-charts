@@ -1,0 +1,16 @@
+server:
+  rbac:
+    enabled: true
+    policy: |
+      g, admin, role:admin
+      g, dev, role:viewer
+  apiRequestsRateLimit: 50
+  env:
+    - name: LOG_LEVEL
+      value: debug
+
+operator:
+  enableLeaderElection: false
+  env:
+    - name: LOG_LEVEL
+      value: debug

@@ -29,6 +29,8 @@ telemetry: true
 server:
   # -- Image to use for the server container.
   image: ghcr.io/openeverest/openeverest
+  # -- Number of replicas for the server deployment.
+  replicaCount: 1
   # -- Resources to allocate for the server container.
   resources:
     limits:
