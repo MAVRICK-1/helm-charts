@@ -56,13 +56,6 @@ jobs:
   test-values:
     name: Test Values
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        values:
-          - ci/scheduling-values.yaml
-          - ci/tls-values.yaml
-          - ci/ingress-values.yaml
-          - ci/rbac-values.yaml
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -90,11 +83,16 @@ jobs:
           helm dependency build ./charts/pmm3
 
       - name: Run helm template (default values)
-        run: |
-          helm template test charts/everest --namespace everest-system
+        run: helm template test charts/everest --namespace everest-system
 
-      - name: Run helm template (${{ matrix.values }})
-        run: |
-          helm template test charts/everest \
-            --namespace everest-system \
-            -f charts/everest/${{ matrix.values }}
+      - name: Run helm template (scheduling values)
+        run: helm template test charts/everest --namespace everest-system -f charts/everest/ci/scheduling-values.yaml
+
+      - name: Run helm template (tls values)
+        run: helm template test charts/everest --namespace everest-system -f charts/everest/ci/tls-values.yaml
+
+      - name: Run helm template (ingress values)
+        run: helm template test charts/everest --namespace everest-system -f charts/everest/ci/ingress-values.yaml
+
+      - name: Run helm template (rbac values)
+        run: helm template test charts/everest --namespace everest-system -f charts/everest/ci/rbac-values.yaml
