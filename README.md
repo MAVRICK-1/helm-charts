@@ -2,8 +2,6 @@
 
 This repository contains the official Helm charts for [OpenEverest](https://openeverest.io/), the open-source cloud-native database platform.
 
-testing 
-
 OpenEverest helps you deploy and manage databases on Kubernetes without the operational overhead. These charts provide a simple way to install and configure the OpenEverest control plane in your cluster.
 
 For more information about the project, visit the [main OpenEverest repository](https://github.com/openeverest/openeverest).
