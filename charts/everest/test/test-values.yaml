@@ -1,3 +1,118 @@
-# Default values used for helm template testing
-# This file is used by `make template` to validate chart rendering
-# test
+# Comprehensive test values covering all major configurable fields in values.yaml
+
+telemetry: false
+
+server:
+  resources:
+    limits:
+      cpu: 400m
+      memory: 800Mi
+    requests:
+      cpu: 150m
+      memory: 32Mi
+  service:
+    type: ClusterIP
+    port: 8080
+  rbac:
+    enabled: true
+    policy: |
+      g, admin, role:admin
+      g, dev, role:viewer
+  apiRequestsRateLimit: 50
+  initialAdminPassword: "test-password"
+  tls:
+    enabled: false
+  env:
+    - name: LOG_LEVEL
+      value: debug
+  nodeSelector:
+    kubernetes.io/os: linux
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: everest
+      effect: NoSchedule
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-type
+                operator: In
+                values: [everest]
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: everest-server
+
+operator:
+  init: true
+  enableLeaderElection: false
+  resources:
+    limits:
+      cpu: 600m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+  env:
+    - name: LOG_LEVEL
+      value: debug
+  nodeSelector:
+    kubernetes.io/os: linux
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: everest
+      effect: NoSchedule
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-type
+                operator: In
+                values: [everest]
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: everest-operator
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: everest.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: everest-tls
+      hosts:
+        - everest.example.com
+
+dataImporters:
+  perconaPGOperator:
+    enabled: true
+  perconaPXCOperator:
+    enabled: true
+  perconaPSMDBOperator:
+    enabled: true
+
+upgrade:
+  preflightChecks: false
+  crdChecks: false
+
+dbNamespace:
+  enabled: true
+  namespaceOverride: everest
+
+versionMetadataURL: "https://check.percona.com"
