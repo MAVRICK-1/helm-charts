@@ -83,6 +83,11 @@ deps-build: add-repos
 docs-gen:
 	docker run --rm -v "$(PWD)/:/helm-docs" -u $(shell id -u) jnorwood/helm-docs:v1.14.2
 
+.PHONY: test
+test:
+	$(HELM) template test . --namespace everest-system
+	$(HELM) template test . --namespace everest-system -f test/test-values.yaml
+
 .PHONY: link-crds
 link-crds:
 	@mkdir -p crds
