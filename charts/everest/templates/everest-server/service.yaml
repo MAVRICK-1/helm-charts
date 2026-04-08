@@ -11,6 +11,9 @@ spec:
     app.kubernetes.io/name: everest-server
     app.kubernetes.io/component: everest-server
   type: {{ .Values.server.service.type }}
+  {{- if .Values.server.service.loadBalancerClass }}
+  loadBalancerClass: {{ .Values.server.service.loadBalancerClass }}
+  {{- end }}
   ports:
     - protocol: TCP
       {{- if .Values.server.tls.enabled }}

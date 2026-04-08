@@ -235,7 +235,8 @@ The following table shows the configurable parameters of the OpenEverest chart a
 | server.rbac.enabled | bool | `false` | If set, enables RBAC for Everest. |
 | server.rbac.policy | string | `"g, admin, role:admin\n"` | RBAC policy configuration. Ignored if `rbac.enabled` is false. |
 | server.resources | object | `{"limits":{"cpu":"200m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"20Mi"}}` | Resources to allocate for the server container. |
-| server.service | object | `{"name":"everest","port":8080,"type":"ClusterIP"}` | Service configuration for the server. |
+| server.service | object | `{"loadBalancerClass":"","name":"everest","port":8080,"type":"ClusterIP"}` | Service configuration for the server. |
+| server.service.loadBalancerClass | string | `""` | LoadBalancer class for the service. Only applies when `service.type=LoadBalancer`. Ref: https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-class |
 | server.service.name | string | `"everest"` | Name of the service for everest |
 | server.service.port | int | `8080` | Port to expose on the service. If `tls.enabled=true`, then the service is exposed on port 443. |
 | server.service.type | string | `"ClusterIP"` | Type of service to create. |

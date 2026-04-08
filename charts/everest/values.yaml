@@ -46,6 +46,9 @@ server:
     # -- Port to expose on the service.
     # If `tls.enabled=true`, then the service is exposed on port 443.
     port: 8080
+    # -- LoadBalancer class for the service. Only applies when `service.type=LoadBalancer`.
+    # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-class
+    loadBalancerClass: ""
   # -- Key for signing JWT tokens. This needs to be an RSA private key.
   # This is created during installation only.
   # To update the key after installation, you need to manually update the `everest-jwt` Secret or use everestctl.
