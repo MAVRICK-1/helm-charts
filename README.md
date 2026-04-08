@@ -22,7 +22,7 @@ This deploys the core OpenEverest components and sets up the management interfac
 
 ## Configuration
 
-The Helm chart supports various configuration options for production deployments, custom resource limits, and integration with existing infrastructure.
+The Helm chart supports various configuration options for production deployments, custom resource limits, and integration with existing infrastructure. Refer to the [Chart documentation](charts/everest/README.md) for more information.
 
 For detailed installation instructions, upgrade procedures, and advanced configuration options, see the [OpenEverest documentation](https://openeverest.io/documentation/current/).
 

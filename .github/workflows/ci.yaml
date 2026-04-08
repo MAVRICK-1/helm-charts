@@ -1,0 +1,67 @@
+name: Helm Chart CI
+
+on:
+  pull_request:
+    paths:
+      - 'charts/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Add Helm repos
+        run: make -C charts/everest add-repos
+
+      - name: Build chart dependencies
+        run: make -C charts/everest deps-build
+
+      - name: Run helm lint
+        run: helm lint charts/everest --namespace everest-system
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: Run ct lint
+        run: |
+          ct lint \
+            --charts charts/everest \
+            --validate-maintainers=false
+
+  test-values:
+    name: Test Values
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Add Helm repos
+        run: make -C charts/everest add-repos
+
+      - name: Build chart dependencies
+        run: make -C charts/everest deps-build
+
+      - name: Run helm template
+        run: make -C charts/everest test

@@ -197,7 +197,7 @@ The following table shows the configurable parameters of the OpenEverest chart a
 | ingress.ingressClassName | string | `""` | Ingress class name. This is used to specify which ingress controller should handle this ingress. |
 | ingress.tls | list | `[]` | Each entry in the list specifies a TLS certificate and the hosts it applies to. |
 | namespaceOverride | string | `""` | Namespace override. Defaults to the value of .Release.Namespace. |
-| olm.catalogSourceImage | string | `"ghcr.io/openeverest/openeverest-catalog-dev"` | Image to use for Everest CatalogSource. |
+| olm.catalogSourceImage | string | `"ghcr.io/openeverest/openeverest-catalog"` | Image to use for Everest CatalogSource. |
 | olm.image | string | `"percona/olm@sha256:13e8f4e919e753faa7da35a9064822381098bcd44acc284877bf0964ceecbfd5"` | Image to use for the OLM components. |
 | olm.install | bool | `true` | If set, installs OLM in the provided namespace. Should be set to `false` if compatibility.openshift=true. |
 | olm.namespace | string | `"everest-olm"` | Namespace where OLM is installed. Do no change unless you know what you are doing. DEPRECATED: Will be removed in a future release. Use olm.namespaceOverride instead. |
@@ -206,24 +206,30 @@ The following table shows the configurable parameters of the OpenEverest chart a
 | olm.packageserver.tls.tlsCert | string | `""` | Client certificate for the PackageServer APIService. Overrides the tls.type setting. |
 | olm.packageserver.tls.tlsKey | string | `""` | Client key for the PackageServer APIService. Overrides the tls.type setting. |
 | olm.packageserver.tls.type | string | `"helm"` | Type of TLS certificates. Supported values are "helm" and "cert-manager". For production setup, it is recommended to use "cert-manager". |
+| operator.affinity | object | `{}` | Affinity settings for the operator pod. |
 | operator.enableLeaderElection | bool | `true` | Enable leader election for the operator. |
 | operator.env | list | `[]` | Additional environment variables to pass to the operator deployment. |
 | operator.healthProbeAddr | string | `":8081"` | Health probe address for the operator. |
-| operator.image | string | `"ghcr.io/openeverest/openeverest-operator-dev"` | Image to use for the Everest operator container. |
+| operator.image | string | `"ghcr.io/openeverest/openeverest-operator"` | Image to use for the Everest operator container. |
 | operator.init | bool | `true` | Enable initContainer migration |
 | operator.metricsAddr | string | `"127.0.0.1:8080"` | Metrics address for the operator. |
+| operator.nodeSelector | object | `{}` | Node selector for the operator pod. |
 | operator.resources | object | `{"limits":{"cpu":"500m","memory":"128Mi"},"requests":{"cpu":"5m","memory":"64Mi"}}` | Resources to allocate for the operator container. |
+| operator.tolerations | list | `[]` | Tolerations for the operator pod. |
+| operator.topologySpreadConstraints | list | `[]` | Topology spread constraints for the operator pod. |
 | operator.webhook.certs | object | `{"ca.crt":"","tls.crt":"","tls.key":""}` | Certificates to use for the webhook server. The values must be base64 encoded. If unset, uses self-signed certificates. |
 | operator.webhook.preserveTLSCerts | bool |  | If set to true, preserves existing TLS Certificate Secrets during upgrades. This setting is ignored if certificates are explicitly provided in operator.webhook.certs, in which case the specified certificates are used instead. This setting has no effect during installation. |
 | pmm | object | `{"enabled":false,"nameOverride":"pmm"}` | PMM settings. |
 | pmm.enabled | bool | `false` | If set, deploys PMM2 in the release namespace. |
 | pmm3.enabled | bool | `false` | If set, deploys PMM3 in the release namespace. |
 | pmm3.pmm | object | `{"nameOverride":"pmm3"}` | PMM configuration. All PMM chart values go under this key. |
+| server.affinity | object | `{}` | Affinity settings for the server pod. |
 | server.apiRequestsRateLimit | int | `100` | Set the allowed number of requests per second. |
 | server.env | list | `[]` | Additional environment variables to pass to the server deployment. |
-| server.image | string | `"ghcr.io/openeverest/openeverest-dev"` | Image to use for the server container. |
+| server.image | string | `"ghcr.io/openeverest/openeverest"` | Image to use for the server container. |
 | server.initialAdminPassword | string | `""` | The initial password configured for the admin user. If unset, a random password is generated. It is strongly recommended to reset the admin password after installation. |
 | server.jwtKey | string | `""` | Key for signing JWT tokens. This needs to be an RSA private key. This is created during installation only. To update the key after installation, you need to manually update the `everest-jwt` Secret or use everestctl. |
+| server.nodeSelector | object | `{}` | Node selector for the server pod. |
 | server.oidc | object | `{}` | OIDC configuration for Everest. These settings are applied during installation only. To change the settings after installation, you need to manually update the `everest-settings` ConfigMap. |
 | server.rbac | object | `{"enabled":false,"policy":"g, admin, role:admin\n"}` | Settings for RBAC. These settings are applied during installation only. To change the settings after installation, you need to manually update the `everest-rbac` ConfigMap. |
 | server.rbac.enabled | bool | `false` | If set, enables RBAC for Everest. |
@@ -252,7 +258,9 @@ The following table shows the configurable parameters of the OpenEverest chart a
 | server.tls.enabled | bool | `false` | If set, enables TLS for the Everest server. Setting tls.enabled=true creates a Secret containing the TLS certificates. Along with certificate.create, it creates a Certificate resource instead. |
 | server.tls.secret.certs | object | `{"tls.crt":"","tls.key":""}` | Use the specified tls.crt and tls.key in the Secret. If unspecified, the server creates a self-signed certificate (not recommended for production). |
 | server.tls.secret.name | string | `"everest-server-tls"` | Name of the Secret containing the TLS certificates. This Secret is created if tls.enabled=true and certificate.create=false. |
-| telemetry | bool | `false` | If set, enabled sending telemetry information. In production release, this value is `true` by default. |
+| server.tolerations | list | `[]` | Tolerations for the server pod. |
+| server.topologySpreadConstraints | list | `[]` | Topology spread constraints for the server pod. |
+| telemetry | bool | `true` | If set, enabled sending telemetry information. In production release, this value is `true` by default. |
 | upgrade.crdChecks | bool | `true` | Ensures that CRDs are upgraded first (default: true). Set to false to disable. |
 | upgrade.preflightChecks | bool | `true` | Ensures that preflight checks are run before the upgrade (default: true). Set to false to disable. |
 | versionMetadataURL | string | `"https://check.percona.com"` | URL of the Version Metadata Service. |

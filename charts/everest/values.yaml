@@ -143,6 +143,14 @@ server:
   #   value: value1
   # - name: key2
   #   value: value2
+  # -- Node selector for the server pod.
+  nodeSelector: {}
+  # -- Tolerations for the server pod.
+  tolerations: []
+  # -- Affinity settings for the server pod.
+  affinity: {}
+  # -- Topology spread constraints for the server pod.
+  topologySpreadConstraints: []
 operator:
   # -- Enable initContainer migration
   init: true
@@ -168,6 +176,14 @@ operator:
   #   value: value1
   # - name: key2
   #   value: value2
+  # -- Node selector for the operator pod.
+  nodeSelector: {}
+  # -- Tolerations for the operator pod.
+  tolerations: []
+  # -- Affinity settings for the operator pod.
+  affinity: {}
+  # -- Topology spread constraints for the operator pod.
+  topologySpreadConstraints: []
   webhook:
     # -- Certificates to use for the webhook server.
     # The values must be base64 encoded.
