@@ -105,26 +105,8 @@ spec:
             - /bin/sh
             - -ec
             - |
-              OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-              ARCH=$(uname -m)
-
-              # Map ARCH to match available builds
-              if [ "$ARCH" = "x86_64" ]; then
-                  ARCH="amd64"
-              elif [ "$ARCH" = "aarch64" ]; then
-                  ARCH="arm64"
-              else
-                  echo "Unsupported architecture: $ARCH"
-                  exit 1
-              fi
-
-              VERSION={{ .version }}
-              apk add --no-cache --quiet curl
-              curl -sSL -o everestctl https://github.com/percona/everest/releases/download/v${VERSION}/everestctl-${OS}-${ARCH}
-              chmod -R 777 ./everestctl
-              
-              echo "Checking requirements for upgrade to version ${VERSION}"
-              ./everestctl upgrade --in-cluster --dry-run --version-metadata-url={{ .versionMetadataURL }} --kubeconfig=""
+              echo "Checking requirements for upgrade to version {{ .version }}"
+              everestctl upgrade --in-cluster --dry-run --version-metadata-url={{ .versionMetadataURL }} --kubeconfig=""
       dnsPolicy: ClusterFirst
       restartPolicy: OnFailure
       terminationGracePeriodSeconds: 30
