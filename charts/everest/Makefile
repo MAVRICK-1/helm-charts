@@ -127,6 +127,13 @@ controller-webhook-gen: ## Sync controller webhook manifests from the openeveres
 	OUTPUT_DIR=$(PWD)/templates/everest-controller \
 	bash $(PWD)/scripts/sync-controller-webhook.sh
 
+.PHONY: controller-deployment-gen
+controller-deployment-gen: ## Sync controller deployment from the openeverest repo into Helm templates.
+	OPENEVEREST_REPO_URL=$(OPENEVEREST_REPO_URL) \
+	OPENEVEREST_VERSION=$(OPENEVEREST_CRD_VERSION) \
+	OUTPUT_DIR=$(PWD)/templates/everest-controller \
+	bash $(PWD)/scripts/sync-controller-deployment.sh
+
 .PHONY: prepare-pr
 prepare-pr:
 	$(MAKE) deps
@@ -136,3 +143,4 @@ prepare-pr:
 	CRD_VERSION=$(CRD_VERSION) $(MAKE) crds-gen link-crds
 	$(MAKE) controller-manifests-gen
 	$(MAKE) controller-webhook-gen
+	$(MAKE) controller-deployment-gen
