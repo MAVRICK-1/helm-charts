@@ -1,5 +1,5 @@
 {{- if .Values.upgrade.preflightChecks }}
-{{- include "everest.preUpgradeChecks" (dict "namespace" (include "everest.namespace" .) "version" .Chart.AppVersion "versionMetadataURL" (include "everest.versionMetadataURL" .) "image" (.Values.hooks.upgradeChecks.image | default .Values.hooks.image)) }}
+{{- include "everest.preUpgradeChecks" (dict "namespace" (include "everest.namespace" .) "version" .Chart.AppVersion "versionMetadataURL" (include "everest.versionMetadataURL" .) "image" (printf "%s:%s" .Values.hooks.upgradeChecks.image .Values.hooks.upgradeChecks.tag)) }}
 {{- end }}
 ---
 {{- /*
