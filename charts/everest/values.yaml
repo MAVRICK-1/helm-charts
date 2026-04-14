@@ -14,10 +14,10 @@ hooks:
   # If not set, uses the value of `hooks.image`.
   # image: ""
   # -- Configuration for the upgrade checks hook.
-  upgradeChecks: {}
-  # Image to use for the hook job.
-  # If not set, uses the value of `hooks.image`.
-  # image: "alpine:3.20"
+  upgradeChecks:
+    # -- Image for the upgrade checks hook job.
+    # This image must have everestctl pre-installed to support air-gapped environments.
+    image: "ghcr.io/openeverest/everestctl"
 compatibility:
   # -- Enable OpenShift compatibility.
   openshift: false
