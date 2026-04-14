@@ -17,7 +17,7 @@ hooks:
   upgradeChecks:
     # -- Image for the upgrade checks hook job.
     # This image must have everestctl pre-installed to support air-gapped environments.
-    image: "ghcr.io/openeverest/everestctl-dev"
+    image: "ghcr.io/openeverest/everestctl"
 compatibility:
   # -- Enable OpenShift compatibility.
   openshift: false
