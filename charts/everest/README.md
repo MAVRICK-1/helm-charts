@@ -176,12 +176,12 @@ The following table shows the configurable parameters of the OpenEverest chart a
 | dataImporters.perconaPXCOperator.enabled | bool | `true` | If set, installs the Percona PXC Operator data importer. |
 | dbNamespace.enabled | bool | `true` | If set, deploy the database operators in `everest` namespace. The namespace may be overridden by setting `dbNamespace.namespaceOverride`. |
 | dbNamespace.namespaceOverride | string | `"everest"` | If `dbNamespace.enabled` is `true`, deploy the database operators in this namespace. |
-| hooks | object | `{"image":"percona/everest-helmtools:0.0.1","lbcCleanup":{},"pspCleanup":{},"upgradeChecks":{"image":"ghcr.io/openeverest/everestctl-dev"}}` | Configuration for Helm chart hooks. |
+| hooks | object | `{"image":"percona/everest-helmtools:0.0.1","lbcCleanup":{},"pspCleanup":{},"upgradeChecks":{"image":"ghcr.io/openeverest/everestctl"}}` | Configuration for Helm chart hooks. |
 | hooks.image | string |  | Default image to use for the Helm chart hooks job. |
 | hooks.lbcCleanup | object | `{}` | Configuration for LoadBalancerConfig clean-up hook. |
 | hooks.pspCleanup | object | `{}` | Configuration for PodSchedulingPolicy clean-up hook. |
-| hooks.upgradeChecks | object | `{"image":"ghcr.io/openeverest/everestctl-dev"}` | Configuration for the upgrade checks hook. |
-| hooks.upgradeChecks.image | string | `"ghcr.io/openeverest/everestctl-dev"` | Image for the upgrade checks hook job. This image must have everestctl pre-installed to support air-gapped environments. |
+| hooks.upgradeChecks | object | `{"image":"ghcr.io/openeverest/everestctl"}` | Configuration for the upgrade checks hook. |
+| hooks.upgradeChecks.image | string | `"ghcr.io/openeverest/everestctl"` | Image for the upgrade checks hook job. This image must have everestctl pre-installed to support air-gapped environments. |
 | ingress.annotations | object | `{}` | Additional annotations for the ingress resource. |
 | ingress.enabled | bool | `false` | Enable ingress for Everest server |
 | ingress.hosts | list | `[{"host":"chart-example.local","paths":[{"path":"/","pathType":"ImplementationSpecific"}]}]` | List of hosts and their paths for the ingress resource. |
