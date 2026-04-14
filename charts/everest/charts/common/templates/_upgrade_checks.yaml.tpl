@@ -99,7 +99,7 @@ spec:
   template:
     spec:
       containers:
-        - image: {{ .image }}
+        - image: {{ .image }}:{{ .version }}
           name: {{ $hookName }}
           command:
             - /bin/sh
