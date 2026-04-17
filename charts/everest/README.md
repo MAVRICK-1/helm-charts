@@ -176,6 +176,12 @@ The following table shows the configurable parameters of the OpenEverest chart a
 | dataImporters.perconaPXCOperator.enabled | bool | `true` | If set, installs the Percona PXC Operator data importer. |
 | dbNamespace.enabled | bool | `true` | If set, deploy the database operators in `everest` namespace. The namespace may be overridden by setting `dbNamespace.namespaceOverride`. |
 | dbNamespace.namespaceOverride | string | `"everest"` | If `dbNamespace.enabled` is `true`, deploy the database operators in this namespace. |
+| gatewayAPI | object | `{"annotations":{},"enabled":false,"hostnames":[],"parentRefs":[],"rules":[]}` | Configuration for Gateway API (alternative to ingress). Requires a Gateway API implementation (e.g., Kong, Traefik, Istio, Envoy Gateway, AWS/GCP). |
+| gatewayAPI.annotations | object | `{}` | Additional annotations for the HTTPRoute resource. |
+| gatewayAPI.enabled | bool | `false` | Enable Gateway API HTTPRoute for Everest server. |
+| gatewayAPI.hostnames | list | `[]` | Hostnames for the HTTPRoute. If empty, matches all hostnames on the parent Gateway. |
+| gatewayAPI.parentRefs | list | `[]` | Parent Gateway references. At least one is required when enabled. Each entry references an existing Gateway that should route traffic to Everest. |
+| gatewayAPI.rules | list | `[]` | Routing rules. If empty, a default catch-all rule routing to the Everest service is created. |
 | hooks | object | `{"image":"percona/everest-helmtools:0.0.1","lbcCleanup":{},"pspCleanup":{},"upgradeChecks":{"image":"ghcr.io/openeverest/everestctl"}}` | Configuration for Helm chart hooks. |
 | hooks.image | string |  | Default image to use for the Helm chart hooks job. |
 | hooks.lbcCleanup | object | `{}` | Configuration for LoadBalancerConfig clean-up hook. |

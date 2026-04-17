@@ -305,6 +305,28 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+# -- Configuration for Gateway API (alternative to ingress).
+# Requires a Gateway API implementation (e.g., Kong, Traefik, Istio, Envoy Gateway, AWS/GCP).
+gatewayAPI:
+  # -- Enable Gateway API HTTPRoute for Everest server.
+  enabled: false
+  # -- Additional annotations for the HTTPRoute resource.
+  annotations: {}
+  # -- Parent Gateway references. At least one is required when enabled.
+  # Each entry references an existing Gateway that should route traffic to Everest.
+  parentRefs: []
+  #  - name: my-gateway
+  #    namespace: gateway-system
+  #    sectionName: https
+  # -- Hostnames for the HTTPRoute. If empty, matches all hostnames on the parent Gateway.
+  hostnames: []
+  #  - everest.example.com
+  # -- Routing rules. If empty, a default catch-all rule routing to the Everest service is created.
+  rules: []
+  #  - matches:
+  #      - path:
+  #          type: PathPrefix
+  #          value: /
 # Do not change the following values unless you know what you are doing.
 # @ignore
 monitoring:

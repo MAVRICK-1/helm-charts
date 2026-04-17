@@ -99,6 +99,22 @@ ingress:
       hosts:
         - everest.example.com
 
+gatewayAPI:
+  enabled: true
+  annotations:
+    example.com/owner: everest
+  parentRefs:
+    - name: main-gateway
+      namespace: gateway-system
+      sectionName: https
+  hostnames:
+    - everest.example.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
 dataImporters:
   perconaPGOperator:
     enabled: true
