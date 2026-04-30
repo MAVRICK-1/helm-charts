@@ -38,9 +38,6 @@ docker run --rm \
   build "${OPENEVEREST_REPO_URL}/config/default?ref=${OPENEVEREST_VERSION}" \
   --output /workspace/
 
-echo "Fetched manifests:"
-ls -la "${TMPDIR}"
-
 # Locate the deployment file kustomize emits.
 deployment_file=$(find "${TMPDIR}" -name "*_deployment_openeverest-controller-manager.yaml" -type f 2>/dev/null | head -1)
 
@@ -53,28 +50,55 @@ echo "Found deployment: ${deployment_file}"
 
 # -------------------------------------------------------------------------
 # Transform kustomize output into a Helm template.
-# kustomize applies namePrefix=openeverest- and namespace=openeverest-system
-# from config/default/kustomization.yaml. We strip those and apply Helm
-# templating for names, namespace, image, args, resources, etc.
+#
+# kustomize applies namePrefix=openeverest- and namespace=openeverest-system.
+# We rename resources and apply Helm templating for image, args, resources,
+# env, and serviceAccountName. Fields already correct in upstream (probes,
+# security context, strategy, ports) pass through unchanged.
 # -------------------------------------------------------------------------
 {
   echo '{{- if .Values.controller.enabled }}'
   echo '# This file is auto-generated from the openeverest repo'"'"'s config/default/ via kustomize.'
   echo '# Do not edit manually. Run: make controller-deployment-gen'
   sed \
-    -e 's|name: openeverest-controller-manager|name: everest-controller|' \
-    -e 's|namespace: openeverest-system|namespace: {{ include "everest.namespace" . }}|' \
-    -e 's|openeverest-controller-manager|everest-controller|g' \
-    -e 's|control-plane: controller-manager|app: everest-controller|g' \
     -e '/app\.kubernetes\.io\/name: openeverest/d' \
     -e '/app\.kubernetes\.io\/managed-by: kustomize/d' \
-    -e 's|image: .*|image: {{ (default .Values.server.image .Values.controller.image) }}:{{ .Chart.AppVersion }}|' \
-    -e 's|- /everest-controller|- {{ .Values.controller.command }}|' \
+    -e 's|name: openeverest-controller-manager|name: everest-controller|' \
+    -e 's|namespace: openeverest-system|namespace: {{ include "everest.namespace" . }}|' \
     -e 's|serviceAccountName: openeverest-controller-manager|serviceAccountName: everest-controller-manager|' \
+    -e 's|control-plane: controller-manager|app: everest-controller|g' \
+    -e 's|app\.kubernetes\.io/name: openeverest|app: everest-controller|g' \
+    -e 's|image: controller:latest|image: {{ (default .Values.server.image .Values.controller.image) }}:{{ .Chart.AppVersion }}|' \
+    -e 's|- /everest-controller|- {{ .Values.controller.command }}|' \
     -e 's|"ALL"|ALL|' \
     "${deployment_file}" \
   | awk '
-    BEGIN { in_resources = 0 }
+    BEGIN { in_resources = 0; in_args = 0 }
+
+    # Template args — replace hardcoded values with Helm references.
+    /^        - --metrics-bind-address=/ {
+      print "        - --metrics-bind-address={{ .Values.controller.metricsBindAddress }}"
+      next
+    }
+    /^        - --leader-elect$/ {
+      print "        {{- if .Values.controller.leaderElection.enabled }}"
+      print "        - --leader-elect"
+      print "        {{- end }}"
+      next
+    }
+    /^        - --health-probe-bind-address=/ {
+      print "        - --health-probe-bind-address={{ .Values.controller.healthProbeBindAddress }}"
+      next
+    }
+
+    # Replace env: [] with Helm env template.
+    /^        env: \[\]$/ {
+      print "        {{- if .Values.controller.env }}"
+      print "        env:"
+      print "        {{- toYaml .Values.controller.env | nindent 8 }}"
+      print "        {{- end }}"
+      next
+    }
 
     # Replace resources block with Helm template.
     /^        resources:$/ {
@@ -84,42 +108,6 @@ echo "Found deployment: ${deployment_file}"
     in_resources {
       if ($0 ~ /^          /) next
       in_resources = 0
-    }
-
-    # Inject imagePullPolicy after image line.
-    /image:.*\.Values\./ {
-      print; print "        imagePullPolicy: IfNotPresent"; next
-    }
-
-    # Template leader-elect arg.
-    /--leader-elect/ {
-      print "        {{- if .Values.controller.leaderElection.enabled }}"
-      print "        - --leader-elect"
-      print "        {{- end }}"
-      next
-    }
-
-    # Template health probe bind address arg.
-    /--health-probe-bind-address/ {
-      print "        - --health-probe-bind-address={{ .Values.controller.healthProbeBindAddress }}"
-      next
-    }
-
-    # Template metrics bind address arg; append webhook cert arg after.
-    /--metrics-bind-address/ {
-      print "        - --metrics-bind-address={{ .Values.controller.metricsBindAddress }}"
-      print "        - --webhook-cert-path=/tmp/k8s-webhook-server/serving-certs"
-      next
-    }
-
-    # Inject env support after container name line.
-    /^        name: manager$/ {
-      print
-      print "        {{- if .Values.controller.env }}"
-      print "        env:"
-      print "        {{- toYaml .Values.controller.env | nindent 8 }}"
-      print "        {{- end }}"
-      next
     }
 
     # Default: pass through.
