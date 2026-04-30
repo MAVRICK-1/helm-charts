@@ -71,6 +71,9 @@ echo "Found deployment: ${deployment_file}"
     -e 's|image: controller:latest|image: {{ (default .Values.server.image .Values.controller.image) }}:{{ .Chart.AppVersion }}|' \
     -e 's|- /everest-controller|- {{ .Values.controller.command }}|' \
     -e 's|"ALL"|ALL|' \
+    -e 's|--monitoring-namespace=everest-monitoring|--monitoring-namespace={{ .Values.monitoring.namespaceOverride }}|' \
+    -e 's|name: webhook-certs|name: everest-controller-webhook-server-cert|g' \
+    -e 's|secretName: webhook-server-cert|secretName: everest-controller-webhook-server-cert|g' \
     "${deployment_file}" \
   | awk '
     BEGIN { in_resources = 0; in_args = 0 }
